@@ -4,6 +4,9 @@ FROM oven/bun:1.1-alpine
 # Set working directory
 WORKDIR /app
 
+# Install Node.js (diperlukan oleh 9router)
+RUN apk add --no-cache nodejs npm
+
 # Install 9router secara global
 RUN bun install -g 9router
 
