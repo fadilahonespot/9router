@@ -4,7 +4,7 @@ FROM oven/bun:1.1-alpine
 # Set working directory
 WORKDIR /app
 
-# Install Node.js dan build tools (diperlukan untuk native modules seperti better-sqlite3)
+# Install Node.js dan build tools
 RUN apk add --no-cache \
     nodejs \
     npm \
@@ -12,6 +12,12 @@ RUN apk add --no-cache \
     make \
     g++ \
     sqlite-dev
+
+# Pre-install better-sqlite3 agar tidak perlu build saat runtime (menghemat RAM)
+RUN mkdir -p /app/data/runtime && \
+    cd /app/data/runtime && \
+    npm init -y && \
+    npm install better-sqlite3@12.6.2 --no-audit --no-fund
 
 # Install 9router secara global
 RUN bun install -g 9router
