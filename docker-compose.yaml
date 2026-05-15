@@ -1,0 +1,12 @@
+services:
+  9router:
+    build: .
+    container_name: 9router
+    ports:
+      - "20128:20128"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - JWT_SECRET=9router20261234510RTYUIOPasdfGHJk
+      - INITIAL_PASSWORD=admin123
+    restart: unless-stopped
