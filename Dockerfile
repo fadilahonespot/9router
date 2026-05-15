@@ -1,25 +1,25 @@
-# Gunakan base image Bun yang ringan
-FROM oven/bun:1.1-alpine
+# Gunakan base image Debian Slim agar lebih kompatibel dengan native modules (sqlite)
+FROM oven/bun:1.1-slim
 
-# Set working directory
 WORKDIR /app
 
-# Install Node.js dan build tools
-RUN apk add --no-cache \
+# Install Node.js dan build tools versi Debian
+RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     python3 \
     make \
     g++ \
-    sqlite-dev
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# 1. Pre-install better-sqlite3 agar tidak perlu build saat runtime (menghemat RAM)
+# 1. Pre-install database agar tidak perlu build saat runtime
 RUN mkdir -p /app/data/runtime && \
     cd /app/data/runtime && \
     npm init -y && \
     npm install better-sqlite3@12.6.2 --no-audit --no-fund
 
-# 2. Setup folder data dan symlink agar 9router bisa menulis konfigurasi (penting!)
+# 2. Setup folder data dan symlink agar 9router bisa menulis konfigurasi
 RUN mkdir -p /app/data && ln -sf /app/data /root/.9router
 
 # 3. Install 9router secara global
